@@ -18,7 +18,7 @@ client.on('connect', function () {
 
 app.use(cors()); // Add this line to enable CORS for all routes
 
-app.get('/sendData', (req, res) => {
+app.post('/sendData', (req, res) => {
     // Publish the JSON message to the topic
     client.publish(topic, JSON.stringify(message), function (err) {
         if (err) {
