@@ -6,7 +6,8 @@ const mqtt = require('mqtt');
 const brokerAddress = "65.2.135.170";
 const port = 1883;
 const topic = "JM/Sensor1";
-const message = { "doorposition": 1 };
+const openmessage = { "doorposition": 1 };
+const closeMessage = { "doorposition": 0 };
 
 // Create an MQTT client
 const client  = mqtt.connect(`mqtt://${brokerAddress}:${port}`);
@@ -20,7 +21,7 @@ app.use(cors()); // Add this line to enable CORS for all routes
 
 app.post('/sendData', (req, res) => {
     // Publish the JSON message to the topic
-    client.publish(topic, JSON.stringify(message), function (err) {
+    client.publish(topic, JSON.stringify(openmessage), function (err) {
         if (err) {
             console.error('Error occurred while publishing the message:', err);
             res.status(500).send('Error occurred while publishing the message');
@@ -30,6 +31,19 @@ app.post('/sendData', (req, res) => {
         }
     });
 });
+
+app.post('/closeData', (req, res) => {
+    // Publish the JSON message to the topic
+    client.publish(topic, JSON.stringify(closeMessage), function (err) {
+        if (err) {
+            console.error('Error occurred while publishing the message:', err);
+            res.status(500).send('Error occurred while publishing the message');
+        } else {
+            console.log('Message published successfully');
+            res.status(200).send('Message published successfully');
+        }
+    });
+})
 
 const PORT = 3000;
 app.listen(PORT, () => {
